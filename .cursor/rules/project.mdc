@@ -1,0 +1,17 @@
+---
+description: Contrato S&F Pollería — leer .agents antes de codificar
+globs:
+alwaysApply: true
+---
+
+# S&F Pollería
+
+Antes de escribir o modificar código:
+
+1. Leé `.agents/README.md` y el orden de lectura indicado.
+2. Reglas inviolables: `.agents/rules/00-core.md` y `.agents/rules/11-ai-behavior.md`.
+3. Negocio: `.agents/domain/`.
+4. Procedimientos: `.agents/skills/`.
+
+No inventes carpetas fuera de `.agents/rules/02-project-structure.md`.
+No implementes funcionalidad de negocio no solicitada.
