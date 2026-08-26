@@ -1,5 +1,2 @@
--- S&F Pollería — seed de desarrollo (ejecutar tras migraciones iniciales)
--- Usuarios se crean vía Supabase Auth; perfiles en migración auth.
-
--- Ejemplo: categorías de gasto
--- INSERT INTO expense_categories (name) VALUES ('Servicios'), ('Limpieza'), ('Otros');
+-- S&F Pollería — seeds
+-- Catálogo del local: ejecutar supabase/scripts/seed-catalog-sf.sql en SQL Editor.

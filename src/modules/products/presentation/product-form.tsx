@@ -9,6 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { formatGramsFromKg, gramsToKg, kgToGrams } from "@/shared/utils/weight";
+import { numberInputValue, parseOptionalNumber } from "@/shared/utils/number-input";
 
 interface CategoryOption {
   id: string;
@@ -45,10 +46,8 @@ export function ProductForm({ mode, categories, initial }: ProductFormProps) {
   const router = useRouter();
   const base = initial ?? emptyInitial;
   const [name, setName] = useState(base.name);
-  const [price, setPrice] = useState(mode === "create" ? "" : String(base.price));
-  const [minStock, setMinStock] = useState(
-    mode === "create" ? "" : String(kgToGrams(base.minStock))
-  );
+  const [price, setPrice] = useState(numberInputValue(base.price));
+  const [minStock, setMinStock] = useState(numberInputValue(kgToGrams(base.minStock)));
   const [categoryId, setCategoryId] = useState(base.categoryId ?? "");
   const [isActive, setIsActive] = useState(base.isActive);
   const [loading, setLoading] = useState(false);
@@ -64,7 +63,7 @@ export function ProductForm({ mode, categories, initial }: ProductFormProps) {
             kind: "simple",
             saleUnit: "kg",
             price: Number(price),
-            minStock: gramsToKg(Number(minStock || "0")),
+            minStock: gramsToKg(parseOptionalNumber(minStock)),
             initialStock: 0,
             categoryId: categoryId || null,
             isActive,
@@ -74,7 +73,7 @@ export function ProductForm({ mode, categories, initial }: ProductFormProps) {
             id: base.id,
             name,
             price: Number(price),
-            minStock: gramsToKg(Number(minStock || "0")),
+            minStock: gramsToKg(parseOptionalNumber(minStock)),
             categoryId: categoryId || null,
             isActive,
           });

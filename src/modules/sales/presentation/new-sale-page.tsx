@@ -1,4 +1,4 @@
-import { listProductsUseCase } from "@/modules/products/application/list-products.use-case";
+import { listSimpleProductsUseCase } from "@/modules/products/application/list-catalog.use-case";
 import { createSupabaseProductRepository } from "@/modules/products/infrastructure/supabase-product.repository";
 import { createClient } from "@/shared/lib/supabase/server";
 
@@ -7,10 +7,7 @@ import { SaleForm } from "./sale-form";
 export async function NewSalePage() {
   const supabase = await createClient();
   const productRepo = createSupabaseProductRepository(supabase);
-  const products = await listProductsUseCase(productRepo, {
-    active: "active",
-    kind: "simple",
-  });
+  const products = await listSimpleProductsUseCase(productRepo);
 
   return (
     <div className="space-y-6">

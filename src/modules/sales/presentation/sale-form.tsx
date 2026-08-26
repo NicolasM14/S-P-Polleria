@@ -15,6 +15,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { formatCurrency } from "@/shared/utils/format-currency";
 import { formatQuantity } from "@/shared/utils/format-quantity";
+import { numberInputValue } from "@/shared/utils/number-input";
 import { gramsToKg, kgToGrams } from "@/shared/utils/weight";
 
 import { createSaleAction } from "./sale.actions";
@@ -100,7 +101,7 @@ export function SaleForm({ products }: SaleFormProps) {
     const product = products.find((p) => p.id === productId);
     updateItem(index, {
       productId,
-      unitPrice: product ? String(product.price) : "",
+      unitPrice: product ? numberInputValue(product.price) : "",
       quantity: "",
     });
   }
@@ -250,7 +251,7 @@ export function SaleForm({ products }: SaleFormProps) {
                       <p className="text-xs text-muted-foreground tabular-nums">
                         Stock disponible:{" "}
                         <span className="font-medium text-foreground">
-                          {formatQuantity(selected.stock, "kg")} g
+                          {formatQuantity(selected.stock, selected.saleUnit)} g
                         </span>
                         {row.quantity && Number(row.quantity) > 0 ? (
                           <>
@@ -272,8 +273,8 @@ export function SaleForm({ products }: SaleFormProps) {
               })
             )}
             <div className="flex flex-wrap items-end justify-between gap-3 border-t pt-3">
-              <div className="w-full space-y-1.5 sm:max-w-[160px]">
-                <Label htmlFor="discount">Descuento</Label>
+              <div className="w-full space-y-1.5 sm:max-w-[220px]">
+                <Label htmlFor="discount">Descuento ($)</Label>
                 <Input
                   id="discount"
                   type="number"
@@ -281,8 +282,11 @@ export function SaleForm({ products }: SaleFormProps) {
                   step="0.01"
                   value={discount}
                   onChange={(e) => setDiscount(e.target.value)}
-                  placeholder="0"
+                  placeholder="Ej. 1000"
                 />
+                <p className="text-xs text-muted-foreground">
+                  Promos del flyer: ej. 2 kg milanesa → subtotal $18.000, descuento $1.000.
+                </p>
               </div>
               <div className="space-y-0.5 text-right text-sm">
                 <p className="tabular-nums text-muted-foreground">

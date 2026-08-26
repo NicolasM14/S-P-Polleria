@@ -581,6 +581,18 @@ Producto: Pechuga — Precio **$8.000 / kg** — Vendés **1200 g** (1,2 kg):
 
 Si hay descuento de $100 → Total = **$9.500**. Los pagos deben sumar $9.500.
 
+### Promos del flyer (descuento manual)
+
+No hay productos de “oferta” separados: vendés el producto normal y ponés el **descuento en pesos**.
+
+**Ejemplo — 2 kg milanesa a $17.000** (precio lista $9.000/kg):
+
+1. Producto **Milanesa**, cantidad **2000** g → subtotal **$18.000**
+2. Descuento **$1.000** → total **$17.000**
+3. Pagos que sumen **$17.000**
+
+**Ejemplo — 2 kg menudo a $4.000** ($2.500/kg): subtotal $5.000, descuento **$1.000**, total **$4.000**.
+
 ### Importante
 
 - Cantidades en **gramos enteros** (no uses 1,2; usá 1200).

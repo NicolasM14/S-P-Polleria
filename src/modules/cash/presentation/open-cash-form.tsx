@@ -8,6 +8,7 @@ import { openCashSessionAction } from "./cash.actions";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
+import { parseOptionalNumber } from "@/shared/utils/number-input";
 
 export function OpenCashForm() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export function OpenCashForm() {
     setLoading(true);
 
     const result = await openCashSessionAction({
-      openingAmount: Number(openingAmount || "0"),
+      openingAmount: parseOptionalNumber(openingAmount),
     });
 
     setLoading(false);
@@ -42,7 +43,6 @@ export function OpenCashForm() {
           type="number"
           min="0"
           step="0.01"
-          required
           value={openingAmount}
           onChange={(e) => setOpeningAmount(e.target.value)}
           placeholder="Ej. 10000"
