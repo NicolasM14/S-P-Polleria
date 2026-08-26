@@ -17,7 +17,8 @@ export function createSupabaseSaleRepository(client: SupabaseClient): SaleReposi
       const { data, error } = await client
         .from("sales")
         .select("*")
-        .order("sold_at", { ascending: false });
+        .order("sold_at", { ascending: false })
+        .limit(100);
       if (error) throw new SaleDomainError(error.message);
       return (data ?? []).map(mapSaleRow);
     },

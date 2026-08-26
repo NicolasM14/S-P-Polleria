@@ -29,7 +29,7 @@ export function ExpenseForm({ categories }: ExpenseFormProps) {
   const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [fromCash, setFromCash] = useState(true);
+  const [fromCash, setFromCash] = useState(false);
   const [occurredAt, setOccurredAt] = useState(defaultOccurredAtLocal);
   const [loading, setLoading] = useState(false);
 
@@ -112,18 +112,22 @@ export function ExpenseForm({ categories }: ExpenseFormProps) {
         />
       </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={fromCash}
-          onChange={(e) => setFromCash(e.target.checked)}
-          className="h-4 w-4 rounded border-input"
-        />
-        Descontar de caja (efectivo)
-      </label>
-      <p className="text-xs text-muted-foreground">
-        Si hay caja abierta y marcás esta opción, se registra un egreso de efectivo.
-      </p>
+      <div className="space-y-2 rounded-lg border border-dashed border-border bg-secondary/30 p-3">
+        <p className="text-sm font-medium text-foreground">Caja</p>
+        <p className="text-xs text-muted-foreground">
+          Por defecto el gasto <span className="font-medium">no</span> se descuenta del cajón.
+          Marcá la opción solo si salió plata en efectivo.
+        </p>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={fromCash}
+            onChange={(e) => setFromCash(e.target.checked)}
+            className="h-4 w-4 rounded border-input"
+          />
+          Descontar de caja (efectivo)
+        </label>
+      </div>
 
       <div className="flex gap-2 pt-2">
         <Button

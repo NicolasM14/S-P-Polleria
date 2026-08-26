@@ -37,6 +37,10 @@ export interface CashMovement {
 export interface OpenCashSessionView {
   session: CashSession;
   expectedBalance: number;
+  /** Transferencias cobradas en ventas desde la apertura (no mueve efectivo). */
+  transferSalesTotal: number;
+  /** Transferencias pagadas en compras desde la apertura (no mueve efectivo). */
+  transferPurchasesTotal: number;
   movements: CashMovement[];
 }
 

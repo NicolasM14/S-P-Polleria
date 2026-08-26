@@ -1,4 +1,7 @@
-import type { PaymentMethod } from "@/shared/constants/payment-methods";
+import type {
+  PaymentMethod,
+  StoredPaymentMethod,
+} from "@/shared/constants/payment-methods";
 
 export type SaleStatus = "completed" | "voided";
 
@@ -31,7 +34,7 @@ export interface SaleItem {
 export interface SalePayment {
   id: string;
   saleId: string;
-  method: PaymentMethod;
+  method: StoredPaymentMethod;
   amount: number;
 }
 

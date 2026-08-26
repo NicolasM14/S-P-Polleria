@@ -4,22 +4,20 @@
 
 Reglas de **venta en mostrador**: cantidades, pagos, anulación e impactos.
 
-## Venta por kg
+## Venta por kg (UI en gramos)
 
-- Cantidad con **hasta 3 decimales**.
-- Precio puede ser por kg; total línea = cantidad × precio unitario.
-- Validar cantidad > 0.
+- En pantalla se ingresan **gramos enteros** (como la balanza: `1200` = 1,2 kg).
+- Internamente se guarda en **kg** (`gramos / 1000`).
+- Precio es **por kg**; total línea = (gramos/1000) × precio/kg.
+- Validar gramos > 0 (enteros).
 
 ## Venta por unidad
 
-- Cantidades **enteras** (salvo excepción documentada).
-- Total línea = cantidad × precio unitario.
+- No usado en la operación actual (solo gramos/kg).
 
 ## Combos
 
-- Se venden como un ítem de combo.
-- Stock se descuenta de **cada componente** según receta × cantidad vendida.
-- Si falta stock de un componente → rechazar venta.
+- No se usan en la app actual.
 
 ## Descuentos
 
@@ -31,7 +29,7 @@ Reglas de **venta en mostrador**: cantidades, pagos, anulación e impactos.
 
 - Una venta puede tener N pagos.
 - **Regla:** `sum(pagos) = total_venta` exacto.
-- Métodos: efectivo, transferencia, tarjeta, etc.
+- Métodos activos: **efectivo** y **transferencia** (sin tarjeta).
 - **Solo efectivo** impacta caja física (ver cash-rules).
 
 ## Anulación

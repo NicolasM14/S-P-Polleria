@@ -107,8 +107,8 @@ export function ReportsSummary({
                 <thead className="sticky top-0 border-b bg-secondary/60 text-muted-foreground">
                   <tr>
                     <th className="px-4 py-3 font-medium">Producto</th>
-                    <th className="px-4 py-3 font-medium">Stock</th>
-                    <th className="px-4 py-3 font-medium">Mínimo</th>
+                    <th className="px-4 py-3 font-medium">Stock (g)</th>
+                    <th className="px-4 py-3 font-medium">Mínimo (g)</th>
                   </tr>
                 </thead>
                 <tbody>

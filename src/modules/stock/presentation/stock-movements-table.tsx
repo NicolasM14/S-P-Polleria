@@ -24,8 +24,8 @@ export function StockMovementsTable({ movements }: StockMovementsTableProps) {
               <th className="px-4 py-3 font-medium">Fecha</th>
               <th className="px-4 py-3 font-medium">Producto</th>
               <th className="px-4 py-3 font-medium">Tipo</th>
-              <th className="px-4 py-3 font-medium">Cantidad</th>
-              <th className="px-4 py-3 font-medium">Stock resultante</th>
+              <th className="px-4 py-3 font-medium">Cantidad (g)</th>
+              <th className="px-4 py-3 font-medium">Stock resultante (g)</th>
               <th className="px-4 py-3 font-medium">Notas</th>
             </tr>
           </thead>

@@ -13,7 +13,8 @@ export function createSupabaseExpenseRepository(client: SupabaseClient): Expense
         .select(
           "id, category_id, description, amount, from_cash, occurred_at, created_by, created_at, expense_categories(name)"
         )
-        .order("occurred_at", { ascending: false });
+        .order("occurred_at", { ascending: false })
+        .limit(100);
 
       if (error) throw new ExpenseDomainError(error.message);
       return (data ?? []).map(mapExpenseRow);

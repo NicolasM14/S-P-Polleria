@@ -14,13 +14,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { formatCurrency } from "@/shared/utils/format-currency";
+import { gramsToKg } from "@/shared/utils/weight";
 
 import { createPurchaseAction } from "./purchase.actions";
 
 interface ProductOption {
   id: string;
   name: string;
-  saleUnit: "kg" | "unit";
 }
 
 interface ItemRow {
@@ -45,7 +45,7 @@ function roundMoney(value: number) {
 export function PurchaseForm({ products }: PurchaseFormProps) {
   const router = useRouter();
   const [items, setItems] = useState<ItemRow[]>([
-    { productId: "", quantity: "1", unitCost: "0" },
+    { productId: "", quantity: "", unitCost: "" },
   ]);
   const [payments, setPayments] = useState<PaymentRow[]>([
     { method: "cash", amount: "" },
@@ -57,10 +57,10 @@ export function PurchaseForm({ products }: PurchaseFormProps) {
     () =>
       roundMoney(
         items.reduce((sum, row) => {
-          const qty = Number(row.quantity);
+          const grams = Number(row.quantity);
           const cost = Number(row.unitCost);
-          if (!row.productId || !Number.isFinite(qty) || !Number.isFinite(cost)) return sum;
-          return sum + qty * cost;
+          if (!row.productId || !Number.isFinite(grams) || !Number.isFinite(cost)) return sum;
+          return sum + gramsToKg(grams) * cost;
         }, 0)
       ),
     [items]
@@ -94,7 +94,7 @@ export function PurchaseForm({ products }: PurchaseFormProps) {
         .filter((row) => row.productId)
         .map((row) => ({
           productId: row.productId,
-          quantity: Number(row.quantity),
+          quantity: gramsToKg(Number(row.quantity)),
           unitCost: Number(row.unitCost),
         })),
       payments: payments.map((row) => ({
@@ -117,174 +117,184 @@ export function PurchaseForm({ products }: PurchaseFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-6">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">Ítems</CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              setItems((rows) => [...rows, { productId: "", quantity: "1", unitCost: "0" }])
-            }
-          >
-            Agregar ítem
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {products.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No hay productos simples activos. Creá productos antes de comprar.
-            </p>
-          ) : (
-            items.map((row, index) => {
-              const selected = products.find((p) => p.id === row.productId);
-              return (
-                <div key={index} className="grid gap-2 sm:grid-cols-[1fr_110px_130px_auto]">
-                  <div className="space-y-1.5">
-                    {index === 0 ? <Label>Producto</Label> : null}
-                    <select
-                      value={row.productId}
-                      required
-                      onChange={(e) => updateItem(index, { productId: e.target.value })}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    >
-                      <option value="">Elegir producto</option>
-                      {products.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ({p.saleUnit})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    {index === 0 ? <Label>Cantidad</Label> : null}
-                    <Input
-                      type="number"
-                      min={selected?.saleUnit === "unit" ? "1" : "0.001"}
-                      step={selected?.saleUnit === "unit" ? "1" : "0.001"}
-                      required
-                      value={row.quantity}
-                      onChange={(e) => updateItem(index, { quantity: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    {index === 0 ? <Label>Costo unit.</Label> : null}
-                    <Input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      required
-                      value={row.unitCost}
-                      onChange={(e) => updateItem(index, { unitCost: e.target.value })}
-                    />
-                  </div>
-                  <div className={index === 0 ? "pt-7" : ""}>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      disabled={items.length <= 1}
-                      onClick={() => setItems((rows) => rows.filter((_, i) => i !== index))}
-                    >
-                      Quitar
-                    </Button>
+    <form onSubmit={handleSubmit} className="mx-auto max-w-6xl space-y-4">
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+        <Card className="min-h-[320px]">
+          <CardHeader className="flex flex-row items-start justify-between space-y-0 gap-3">
+            <div>
+              <CardTitle className="text-base">Ítems</CardTitle>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Ingresá los <span className="font-medium">gramos</span> (ej. 10000 = 10 kg). Suma al
+                stock.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="shrink-0"
+              onClick={() =>
+                setItems((rows) => [...rows, { productId: "", quantity: "", unitCost: "" }])
+              }
+            >
+              Agregar ítem
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {products.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No hay productos simples activos. Creá productos antes de comprar.
+              </p>
+            ) : (
+              items.map((row, index) => (
+                <div key={index} className="space-y-2 rounded-md border border-border/70 p-3">
+                  <div className="grid gap-2 sm:grid-cols-[1fr_100px_110px_auto]">
+                    <div className="space-y-1.5">
+                      {index === 0 ? <Label>Producto</Label> : null}
+                      <select
+                        value={row.productId}
+                        required
+                        onChange={(e) => updateItem(index, { productId: e.target.value })}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      >
+                        <option value="">Elegir producto</option>
+                        {products.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      {index === 0 ? <Label>Cantidad (g)</Label> : null}
+                      <Input
+                        type="number"
+                        min="1"
+                        step="1"
+                        required
+                        value={row.quantity}
+                        onChange={(e) => updateItem(index, { quantity: e.target.value })}
+                        placeholder="Ej. 10000"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      {index === 0 ? <Label>Costo / kg</Label> : null}
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        value={row.unitCost}
+                        onChange={(e) => updateItem(index, { unitCost: e.target.value })}
+                        placeholder="Ej. 6000"
+                      />
+                    </div>
+                    <div className={index === 0 ? "flex items-end pb-0.5" : "flex items-center"}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        disabled={items.length <= 1}
+                        onClick={() => setItems((rows) => rows.filter((_, i) => i !== index))}
+                      >
+                        Quitar
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              );
-            })
-          )}
-          <p className="text-sm font-medium tabular-nums">
-            Total: {formatCurrency(total)}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">Pagos</CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              setPayments((rows) => [...rows, { method: "cash", amount: String(total || "") }])
-            }
-          >
-            Agregar pago
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {payments.map((row, index) => (
-            <div key={index} className="grid gap-2 sm:grid-cols-[1fr_140px_auto]">
-              <div className="space-y-1.5">
-                {index === 0 ? <Label>Método</Label> : null}
-                <select
-                  value={row.method}
-                  onChange={(e) =>
-                    updatePayment(index, { method: e.target.value as PaymentMethod })
-                  }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  {PAYMENT_METHODS.map((method) => (
-                    <option key={method} value={method}>
-                      {PAYMENT_METHOD_LABELS[method]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                {index === 0 ? <Label>Monto</Label> : null}
-                <Input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  required
-                  value={row.amount}
-                  onChange={(e) => updatePayment(index, { amount: e.target.value })}
-                />
-              </div>
-              <div className={index === 0 ? "pt-7" : ""}>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  disabled={payments.length <= 1}
-                  onClick={() => setPayments((rows) => rows.filter((_, i) => i !== index))}
-                >
-                  Quitar
-                </Button>
-              </div>
-            </div>
-          ))}
-          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-            <span className="tabular-nums">Pagos: {formatCurrency(paymentsSum)}</span>
-            {Math.abs(total - paymentsSum) > 0.01 ? (
-              <span className="text-destructive">
-                Diferencia: {formatCurrency(total - paymentsSum)}
-              </span>
-            ) : (
-              <span className="text-success">Pagos = total</span>
+              ))
             )}
-          </div>
-          {payments.length === 1 ? (
+            <div className="border-t pt-3 text-right text-sm">
+              <p className="font-semibold tabular-nums">Total: {formatCurrency(total)}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="min-h-[320px]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Pagos</CardTitle>
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() =>
-                setPayments([{ method: payments[0]?.method ?? "cash", amount: String(total) }])
+                setPayments((rows) => [...rows, { method: "cash", amount: String(total || "") }])
               }
             >
-              Completar con total
+              Agregar pago
             </Button>
-          ) : null}
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {payments.map((row, index) => (
+              <div key={index} className="grid gap-2 sm:grid-cols-[1fr_120px_auto]">
+                <div className="space-y-1.5">
+                  {index === 0 ? <Label>Método</Label> : null}
+                  <select
+                    value={row.method}
+                    onChange={(e) =>
+                      updatePayment(index, { method: e.target.value as PaymentMethod })
+                    }
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    {PAYMENT_METHODS.map((method) => (
+                      <option key={method} value={method}>
+                        {PAYMENT_METHOD_LABELS[method]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  {index === 0 ? <Label>Monto</Label> : null}
+                  <Input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    value={row.amount}
+                    onChange={(e) => updatePayment(index, { amount: e.target.value })}
+                  />
+                </div>
+                <div className={index === 0 ? "flex items-end pb-0.5" : "flex items-center"}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={payments.length <= 1}
+                    onClick={() => setPayments((rows) => rows.filter((_, i) => i !== index))}
+                  >
+                    Quitar
+                  </Button>
+                </div>
+              </div>
+            ))}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-sm">
+              <span className="tabular-nums">Pagos: {formatCurrency(paymentsSum)}</span>
+              {Math.abs(total - paymentsSum) > 0.01 ? (
+                <span className="text-destructive">
+                  Diferencia: {formatCurrency(total - paymentsSum)}
+                </span>
+              ) : (
+                <span className="text-success">Pagos = total</span>
+              )}
+            </div>
+            {payments.length === 1 ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setPayments([{ method: payments[0]?.method ?? "cash", amount: String(total) }])
+                }
+              >
+                Completar con total
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="py-3">
           <CardTitle className="text-base">Notas</CardTitle>
         </CardHeader>
         <CardContent>

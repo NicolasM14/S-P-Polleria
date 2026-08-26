@@ -28,7 +28,7 @@ export async function StockPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-primary">Stock</h1>
         <p className="text-muted-foreground">
-          Saldos de productos simples, movimientos recientes y ajustes manuales.
+          Saldos en gramos, movimientos recientes y ajustes manuales (como en la balanza).
         </p>
       </div>
 

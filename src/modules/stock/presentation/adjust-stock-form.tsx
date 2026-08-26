@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { adjustStockAction } from "./stock.actions";
@@ -10,6 +10,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { formatQuantity } from "@/shared/utils/format-quantity";
+import { gramsToKg } from "@/shared/utils/weight";
 
 interface ProductOption {
   id: string;
@@ -30,18 +31,13 @@ export function AdjustStockForm({ products }: AdjustStockFormProps) {
   const [otherDetail, setOtherDetail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const selected = useMemo(
-    () => products.find((p) => p.id === productId),
-    [products, productId]
-  );
-
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setLoading(true);
 
     const result = await adjustStockAction({
       productId,
-      quantity: Number(quantity),
+      quantity: gramsToKg(Number(quantity)),
       reason,
       otherDetail: reason === "other" ? otherDetail : "",
     });
@@ -81,26 +77,25 @@ export function AdjustStockForm({ products }: AdjustStockFormProps) {
         >
           {products.map((product) => (
             <option key={product.id} value={product.id}>
-              {product.name} ({product.saleUnit}) — stock{" "}
-              {formatQuantity(product.stock, product.saleUnit)}
+              {product.name} — stock {formatQuantity(product.stock, "kg")} g
             </option>
           ))}
         </select>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="quantity">Cantidad (+ / −)</Label>
+        <Label htmlFor="quantity">Cantidad en g (+ / −)</Label>
         <Input
           id="quantity"
           type="number"
           required
-          step={selected?.saleUnit === "kg" ? "0.001" : "1"}
+          step="1"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          placeholder={selected?.saleUnit === "kg" ? "Ej. -0.500" : "Ej. -2"}
+          placeholder="Ej. -500 o 2000"
         />
         <p className="text-xs text-muted-foreground">
-          Positivo suma stock; negativo descuenta. No puede ser 0.
+          Gramos como en la balanza. Positivo suma; negativo descuenta. No puede ser 0.
         </p>
       </div>
 

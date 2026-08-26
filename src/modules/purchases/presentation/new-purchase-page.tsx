@@ -14,14 +14,14 @@ export async function NewPurchasePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-primary">Nueva compra</h1>
         <p className="text-muted-foreground">
-          Solo productos simples activos. Los pagos deben igualar el total.
+          Comprá en <span className="font-medium">gramos</span>. El costo es por kg. Solo efectivo o
+          transferencia. Los pagos deben igualar el total.
         </p>
       </div>
       <PurchaseForm
         products={products.map((p) => ({
           id: p.id,
           name: p.name,
-          saleUnit: p.saleUnit,
         }))}
       />
     </div>

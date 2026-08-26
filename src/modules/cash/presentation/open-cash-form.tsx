@@ -11,7 +11,7 @@ import { Label } from "@/shared/components/ui/label";
 
 export function OpenCashForm() {
   const router = useRouter();
-  const [openingAmount, setOpeningAmount] = useState("0");
+  const [openingAmount, setOpeningAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -19,7 +19,7 @@ export function OpenCashForm() {
     setLoading(true);
 
     const result = await openCashSessionAction({
-      openingAmount: Number(openingAmount),
+      openingAmount: Number(openingAmount || "0"),
     });
 
     setLoading(false);
@@ -34,9 +34,9 @@ export function OpenCashForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid max-w-md gap-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="openingAmount">Monto de apertura</Label>
+    <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-3 sm:flex-row sm:items-end">
+      <div className="flex-1 space-y-1.5">
+        <Label htmlFor="openingAmount">Efectivo inicial</Label>
         <Input
           id="openingAmount"
           type="number"
@@ -45,12 +45,11 @@ export function OpenCashForm() {
           required
           value={openingAmount}
           onChange={(e) => setOpeningAmount(e.target.value)}
+          placeholder="Ej. 10000"
+          className="tabular-nums"
         />
-        <p className="text-xs text-muted-foreground">
-          Efectivo físico al iniciar el turno. Puede ser 0.
-        </p>
       </div>
-      <Button type="submit" variant="accent" disabled={loading}>
+      <Button type="submit" variant="accent" disabled={loading} className="shrink-0">
         {loading ? "Abriendo…" : "Abrir caja"}
       </Button>
     </form>

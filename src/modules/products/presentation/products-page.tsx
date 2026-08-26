@@ -18,7 +18,7 @@ export async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = (await searchParams) ?? {};
   const filters = productListFiltersSchema.parse({
     search: typeof params.search === "string" ? params.search : undefined,
-    kind: typeof params.kind === "string" ? params.kind : "all",
+    kind: "simple",
     active: typeof params.active === "string" ? params.active : "active",
   });
 
@@ -37,7 +37,7 @@ export async function ProductsPage({ searchParams }: ProductsPageProps) {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-primary">Productos</h1>
           <p className="text-muted-foreground">
-            Catálogo de productos simples y combos con receta.
+            Catálogo de productos con stock en gramos.
           </p>
         </div>
         <Button asChild variant="accent">
@@ -47,7 +47,6 @@ export async function ProductsPage({ searchParams }: ProductsPageProps) {
 
       <ProductsFilters
         search={filters.search}
-        kind={filters.kind ?? "all"}
         active={filters.active ?? "active"}
       />
 

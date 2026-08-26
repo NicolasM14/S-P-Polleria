@@ -31,6 +31,17 @@ Control del **efectivo físico** en el local.
 | Egreso manual | − |
 | Transferencia / tarjeta | **No mueve caja** |
 
+## Transferencias del turno (solo lectura)
+
+Mientras la sesión está abierta, la pantalla de Caja muestra un resumen informativo:
+
+| Concepto | Definición |
+|----------|------------|
+| Cobradas (ventas) | Suma de pagos `transfer` de ventas **completadas** desde la apertura |
+| Pagadas (compras) | Suma de pagos `transfer` de compras desde la apertura |
+
+No se arquean ni se cierran como el efectivo. Sirven para contrastar con el banco.
+
 ## Pagos múltiples
 
 Solo la porción **cash** de cada operación afecta caja.

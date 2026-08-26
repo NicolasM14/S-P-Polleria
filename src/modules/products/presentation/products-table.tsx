@@ -41,20 +41,15 @@ export function ProductsTable({ products, categoryNames }: ProductsTableProps) {
           <thead className="sticky top-0 border-b bg-secondary/60 text-muted-foreground">
             <tr>
               <th className="px-4 py-3 font-medium">Nombre</th>
-              <th className="px-4 py-3 font-medium">Tipo</th>
-              <th className="px-4 py-3 font-medium">Unidad</th>
-              <th className="px-4 py-3 font-medium">Precio</th>
-              <th className="px-4 py-3 font-medium">Stock</th>
+              <th className="px-4 py-3 font-medium">Precio / kg</th>
+              <th className="px-4 py-3 font-medium">Stock (g)</th>
               <th className="px-4 py-3 font-medium">Estado</th>
               <th className="px-4 py-3 font-medium text-right">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => {
-              const lowStock =
-                product.kind === "simple" &&
-                product.isActive &&
-                product.stock <= product.minStock;
+              const lowStock = product.isActive && product.stock <= product.minStock;
               return (
                 <tr key={product.id} className="border-b last:border-0">
                   <td className="px-4 py-3">
@@ -65,20 +60,12 @@ export function ProductsTable({ products, categoryNames }: ProductsTableProps) {
                         : "Sin categoría"}
                     </div>
                   </td>
-                  <td className="px-4 py-3 capitalize">
-                    {product.kind === "simple" ? "Simple" : "Combo"}
-                  </td>
-                  <td className="px-4 py-3">{product.saleUnit === "kg" ? "kg" : "unidad"}</td>
                   <td className="px-4 py-3 tabular-nums">{formatCurrency(product.price)}</td>
                   <td className="px-4 py-3 tabular-nums">
-                    {product.kind === "combo" ? (
-                      <span className="text-muted-foreground">N/A</span>
-                    ) : (
-                      <span className={lowStock ? "font-medium text-warning" : undefined}>
-                        {formatQuantity(product.stock, product.saleUnit)}
-                        {lowStock ? " · bajo" : ""}
-                      </span>
-                    )}
+                    <span className={lowStock ? "font-medium text-warning" : undefined}>
+                      {formatQuantity(product.stock, "kg")} g
+                      {lowStock ? " · bajo" : ""}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span

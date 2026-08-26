@@ -46,7 +46,7 @@ export async function createProductAction(raw: unknown): Promise<ActionResult<{ 
       initialStock: parsed.data.initialStock,
       categoryId: parsed.data.categoryId ?? null,
       isActive: parsed.data.isActive,
-      components: parsed.data.components,
+      components: [],
     });
 
     revalidatePath("/productos");
@@ -75,7 +75,7 @@ export async function updateProductAction(raw: unknown): Promise<ActionResult> {
       minStock: parsed.data.minStock,
       categoryId: parsed.data.categoryId ?? null,
       isActive: parsed.data.isActive,
-      components: parsed.data.components,
+      components: [],
     });
 
     revalidatePath("/productos");

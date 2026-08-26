@@ -2,54 +2,54 @@
 
 ## Objetivo
 
-Implementar ABM de **productos simples y combos** con recetas.
+Implementar ABM de **productos** con stock (principalmente **kg**).
 
 ## Responsabilidad del módulo
 
 - Catálogo de productos activos/inactivos
-- Unidad de medida: kg o unidad
-- Combos: receta de componentes (otros productos)
-- Precios de venta (referencia; venta puede tener ajustes según reglas)
+- Unidad de medida: kg (preferido) o unidad
+- Precios de venta (referencia)
+- **Sin combos** en operación actual (el stock se mide por producto)
 
 ## Flujo
 
 ```
-Alta producto simple → kind=simple, unit=kg|unit
-Alta combo → kind=combo + combo_items (componente, cantidad)
-Editar → no romper historial; preferir desactivar
-Listar → filtros activo, tipo, búsqueda nombre
+Alta producto → kind=simple, unit=kg|unit, stock inicial opcional
+Editar → no romper historial; preferir desactivar; no editar unidad
+Listar → filtros activo, búsqueda nombre
 ```
 
 ## Checklist
 
 - [ ] Validar unit (`kg` | `unit`)
-- [ ] Combo: al menos un componente; cantidades con 3 dec. si kg
-- [ ] Combo **no tiene stock propio**
+- [ ] Kg: hasta 3 decimales
 - [ ] Precio >= 0
-- [ ] Soft delete / `is_active` vs hard delete
+- [ ] Soft delete / `is_active`
+- [ ] No ofrecer alta de combos
 
 ## Archivos permitidos
 
-`modules/products/**`, rutas `/productos`, migraciones `products`, `combo_items`.
+`modules/products/**`, rutas `/productos`, migraciones `products`.
 
 ## Archivos prohibidos
 
 - Lógica de descuento stock aquí (es en ventas)
 - Módulo separado `combos/`
+- UI de recetas / combo_components en formularios
 
 ## Errores comunes
 
 | Error | Correcto |
 |-------|----------|
-| Stock en tabla productos para combos | Solo simples tienen saldo |
-| Componente combo es otro combo anidado profundo | Validar profundidad 1 en v1 |
-| Editar unidad con movimientos históricos | Bloquear o migración explícita |
+| Editar stock en ficha producto | Usar Compras o ajuste de Stock |
+| Editar unidad con movimientos | Bloquear |
 
 ## Ejemplos
 
-- "Pollo kg" → simple, unit kg, stock vía movimientos
-- "Promo familia" → combo: 1kg pollo + 2 unidades gaseosa
+- "Milanesa" → kg, stock vía compras/ajustes
+- "Gaseosa" → unit (si aplica)
 
 ## Notas
 
 - Ver `domain/entities.md`, `domain/stock-rules.md`.
+- Combos fuera del alcance operativo actual.

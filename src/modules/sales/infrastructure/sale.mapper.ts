@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "@/shared/constants/payment-methods";
+import type { StoredPaymentMethod } from "@/shared/constants/payment-methods";
 
 import type {
   Sale,
@@ -37,7 +37,7 @@ interface SaleItemRow {
 interface SalePaymentRow {
   id: string;
   sale_id: string;
-  method: PaymentMethod;
+  method: StoredPaymentMethod;
   amount: number | string;
 }
 

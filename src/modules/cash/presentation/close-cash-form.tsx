@@ -9,6 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { formatCurrency } from "@/shared/utils/format-currency";
+import { cn } from "@/shared/lib/utils";
 
 interface CloseCashFormProps {
   expectedBalance: number;
@@ -44,36 +45,55 @@ export function CloseCashForm({ expectedBalance }: CloseCashFormProps) {
     router.refresh();
   }
 
+  const diffLabel =
+    previewDifference === null
+      ? null
+      : previewDifference === 0
+        ? "Cuadra"
+        : previewDifference > 0
+          ? "Sobra"
+          : "Falta";
+
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
-      <div className="space-y-1.5">
-        <Label htmlFor="countedAmount">Efectivo contado</Label>
-        <Input
-          id="countedAmount"
-          type="number"
-          min="0"
-          step="0.01"
-          required
-          value={countedAmount}
-          onChange={(e) => setCountedAmount(e.target.value)}
-          placeholder="0.00"
-        />
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="countedAmount">Contado en el cajón</Label>
+          <Input
+            id="countedAmount"
+            type="number"
+            min="0"
+            step="0.01"
+            required
+            value={countedAmount}
+            onChange={(e) => setCountedAmount(e.target.value)}
+            placeholder="Ej. 25400"
+            className="tabular-nums"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label>Diferencia</Label>
+          <div
+            className={cn(
+              "flex h-10 items-center rounded-md border px-3 text-sm tabular-nums",
+              previewDifference === null
+                ? "border-input text-muted-foreground"
+                : previewDifference === 0
+                  ? "border-success/40 bg-success/5 font-semibold text-success"
+                  : previewDifference > 0
+                    ? "border-success/40 bg-success/5 font-semibold text-success"
+                    : "border-destructive/40 bg-destructive/5 font-semibold text-destructive"
+            )}
+          >
+            {previewDifference === null
+              ? "—"
+              : `${diffLabel} ${previewDifference > 0 ? "+" : ""}${formatCurrency(previewDifference)}`}
+          </div>
+        </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label>Diferencia estimada</Label>
-        <p className="flex h-10 items-center text-sm tabular-nums text-muted-foreground">
-          {previewDifference === null
-            ? "—"
-            : `${previewDifference >= 0 ? "+" : ""}${formatCurrency(previewDifference)}`}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Esperado: {formatCurrency(expectedBalance)}
-        </p>
-      </div>
-
-      <div className="space-y-1.5 sm:col-span-2">
-        <Label htmlFor="closeNotes">Notas (opcional)</Label>
+        <Label htmlFor="closeNotes">Nota (opcional)</Label>
         <Input
           id="closeNotes"
           value={notes}
@@ -83,11 +103,9 @@ export function CloseCashForm({ expectedBalance }: CloseCashFormProps) {
         />
       </div>
 
-      <div className="sm:col-span-2">
-        <Button type="submit" variant="accent" disabled={loading}>
-          {loading ? "Cerrando…" : "Cerrar caja"}
-        </Button>
-      </div>
+      <Button type="submit" variant="accent" disabled={loading}>
+        {loading ? "Cerrando…" : "Cerrar caja"}
+      </Button>
     </form>
   );
 }

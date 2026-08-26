@@ -20,13 +20,12 @@ export function StockBalancesTable({ balances }: StockBalancesTableProps) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] text-left text-sm">
+        <table className="w-full min-w-[480px] text-left text-sm">
           <thead className="sticky top-0 border-b bg-secondary/60 text-muted-foreground">
             <tr>
               <th className="px-4 py-3 font-medium">Producto</th>
-              <th className="px-4 py-3 font-medium">Unidad</th>
-              <th className="px-4 py-3 font-medium">Stock</th>
-              <th className="px-4 py-3 font-medium">Mínimo</th>
+              <th className="px-4 py-3 font-medium">Stock (g)</th>
+              <th className="px-4 py-3 font-medium">Mínimo (g)</th>
               <th className="px-4 py-3 font-medium">Estado</th>
             </tr>
           </thead>
@@ -39,15 +38,14 @@ export function StockBalancesTable({ balances }: StockBalancesTableProps) {
                   className={`border-b last:border-0 ${low ? "bg-warning/5" : ""}`}
                 >
                   <td className="px-4 py-3 font-medium text-foreground">{row.name}</td>
-                  <td className="px-4 py-3">{row.saleUnit === "kg" ? "kg" : "unidad"}</td>
                   <td className="px-4 py-3 tabular-nums">
                     <span className={low ? "font-semibold text-warning" : undefined}>
-                      {formatQuantity(row.stock, row.saleUnit)}
+                      {formatQuantity(row.stock, "kg")} g
                       {low ? " · bajo" : ""}
                     </span>
                   </td>
                   <td className="px-4 py-3 tabular-nums">
-                    {formatQuantity(row.minStock, row.saleUnit)}
+                    {formatQuantity(row.minStock, "kg")} g
                   </td>
                   <td className="px-4 py-3">
                     <span

@@ -17,7 +17,8 @@ export function createSupabasePurchaseRepository(client: SupabaseClient): Purcha
       const { data, error } = await client
         .from("purchases")
         .select("*")
-        .order("purchased_at", { ascending: false });
+        .order("purchased_at", { ascending: false })
+        .limit(100);
       if (error) throw new PurchaseDomainError(error.message);
       return (data ?? []).map(mapPurchaseRow);
     },

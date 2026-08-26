@@ -14,53 +14,51 @@ export function ClosedSessionsList({ sessions }: ClosedSessionsListProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="sticky top-0 border-b bg-secondary/60 text-muted-foreground">
-            <tr>
-              <th className="px-4 py-3 font-medium">Cierre</th>
-              <th className="px-4 py-3 font-medium">Apertura</th>
-              <th className="px-4 py-3 font-medium">Esperado</th>
-              <th className="px-4 py-3 font-medium">Contado</th>
-              <th className="px-4 py-3 font-medium">Diferencia</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessions.map((session) => {
-              const difference = session.difference ?? 0;
-              return (
-                <tr key={session.id} className="border-b last:border-0">
-                  <td className="px-4 py-3 whitespace-nowrap text-muted-foreground">
-                    {session.closedAt ? formatDateTime(session.closedAt) : "—"}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
-                    {formatCurrency(session.openingAmount)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
-                    {formatCurrency(session.expectedAmount ?? 0)}
-                  </td>
-                  <td className="px-4 py-3 tabular-nums">
-                    {formatCurrency(session.countedAmount ?? 0)}
-                  </td>
-                  <td
-                    className={`px-4 py-3 tabular-nums font-medium ${
-                      difference === 0
-                        ? "text-foreground"
-                        : difference > 0
-                          ? "text-success"
-                          : "text-destructive"
-                    }`}
-                  >
-                    {difference > 0 ? "+" : ""}
-                    {formatCurrency(difference)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[560px] text-left text-sm">
+        <thead className="sticky top-0 border-b bg-secondary/60 text-muted-foreground">
+          <tr>
+            <th className="px-3 py-2 font-medium">Cerrado</th>
+            <th className="px-3 py-2 font-medium">Inicio</th>
+            <th className="px-3 py-2 font-medium">Esperado</th>
+            <th className="px-3 py-2 font-medium">Contado</th>
+            <th className="px-3 py-2 font-medium">Dif.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sessions.map((session) => {
+            const difference = session.difference ?? 0;
+            return (
+              <tr key={session.id} className="border-b last:border-0">
+                <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">
+                  {session.closedAt ? formatDateTime(session.closedAt) : "—"}
+                </td>
+                <td className="px-3 py-2 tabular-nums">
+                  {formatCurrency(session.openingAmount)}
+                </td>
+                <td className="px-3 py-2 tabular-nums">
+                  {formatCurrency(session.expectedAmount ?? 0)}
+                </td>
+                <td className="px-3 py-2 tabular-nums">
+                  {formatCurrency(session.countedAmount ?? 0)}
+                </td>
+                <td
+                  className={`px-3 py-2 font-medium tabular-nums ${
+                    difference === 0
+                      ? "text-foreground"
+                      : difference > 0
+                        ? "text-success"
+                        : "text-destructive"
+                  }`}
+                >
+                  {difference > 0 ? "+" : ""}
+                  {formatCurrency(difference)}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
