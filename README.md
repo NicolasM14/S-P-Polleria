@@ -11,10 +11,10 @@ Gestión interna de stock, ventas, caja, compras y gastos.
 ## Setup en otra PC
 
 ```bash
-git clone https://github.com/NicolasM14/sf-polleria.git
-cd sf-polleria
+git clone https://github.com/NicolasM14/S-P-Polleria.git
+cd S-P-Polleria
 npm install
-cp .env.example .env.local
+copy .env.example .env.local
 ```
 
 Editá `.env.local` con la URL y la anon/publishable key de Supabase (Dashboard → Settings → API).
